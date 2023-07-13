@@ -1,0 +1,19 @@
+{
+  "name": "wd-201-online-voting",
+  "version": "1.0.0",
+  "description": "sports schedule app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/py563/wd-201-online-voting.git"
+  },
+  "author": "py563",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/py563/wd-201-online-voting/issues"
+  },
+  "homepage": "https://github.com/py563/wd-201-online-voting#readme"
+}

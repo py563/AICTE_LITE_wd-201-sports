@@ -11,4 +11,16 @@ app.get("/", function (request, response) {
   response.render("index");
 });
 
+app.get("/signup", async function (request, response) {
+  response.render("signup", {
+    title: "Sign-up",
+  });
+});
+
+app.get("/admin-login", (request, response) => {
+  response.render("adminLogin", {
+    title: "Login",
+  });
+});
+
 module.exports = app;

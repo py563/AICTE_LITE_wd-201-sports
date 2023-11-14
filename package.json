@@ -16,7 +16,6 @@
       "prettier --write ."
     ],
     "*.ejs": [
-      "eslint",
       "prettier --write ."
     ]
   },

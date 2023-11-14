@@ -197,4 +197,13 @@ app.get("/signout", (request, response, next) => {
   });
 });
 
+// voting routes
+
+app.get("/voting", function (request, response) {
+  response.render("voteElections", {
+    title: "Online Voting App",
+    csrfToken: request.csrfToken(),
+  });
+});
+
 module.exports = app;

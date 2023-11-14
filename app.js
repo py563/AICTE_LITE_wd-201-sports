@@ -1,3 +1,4 @@
+// Description: This file contains the main application logic for the Online Voting App
 const express = require("express");
 const app = express();
 const csrf = require("tiny-csrf");
@@ -5,7 +6,7 @@ const { OVAdmin } = require("./models");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
-//authentication
+// authentication
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const session = require("express-session");
@@ -14,7 +15,7 @@ const connectEnsureLogin = require("connect-ensure-login");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-//middleware
+// middleware
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -29,15 +30,15 @@ app.use(
   session({
     secret: "my-secret-key-176172672",
     cookie: { maxAge: 24 * 60 * 60000 },
-  })
+  }),
 );
-//connect - flash middleware
+// connect - flash middleware
 app.use(function (request, response, next) {
   response.locals.messages = request.flash();
   next();
 });
 
-//passport.js initialization
+// passport.js initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -53,7 +54,7 @@ passport.use(
         .then(async (adminuser) => {
           const matchPassword = await bcrypt.compare(
             password,
-            adminuser.password
+            adminuser.password,
           );
           if (matchPassword) {
             return done(null, adminuser);
@@ -61,13 +62,14 @@ passport.use(
             return done(null, false, { message: "Invalid Password" });
           }
         })
+        // eslint-disable-next-line no-unused-vars
         .catch((error) => {
           return done(null, false, {
             message: "Account doesn't exist, Please Signup",
           });
         });
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser((user, done) => {
@@ -111,7 +113,7 @@ app.post("/adminUsers", async function (request, response) {
     if (request.body.firstName.length < 2 || request.body.lastName.length < 2) {
       request.flash(
         "error",
-        "First Name and Last Name must be at least 2 characters long"
+        "First Name and Last Name must be at least 2 characters long",
       );
       return response.redirect("/signup");
     }
@@ -137,7 +139,7 @@ app.post("/adminUsers", async function (request, response) {
     if (error.name === "SequelizeUniqueConstraintError") {
       request.flash(
         "error",
-        "Email already exists, Please login or signup with a different email"
+        "Email already exists, Please login or signup with a different email",
       );
       return response.redirect("/signup");
     }
@@ -165,7 +167,7 @@ app.get(
     } else {
       response.json({ status: "Not Acceptable" });
     }
-  }
+  },
 );
 
 app.post(
@@ -176,7 +178,7 @@ app.post(
   }),
   (request, response) => {
     response.redirect("/elections");
-  }
+  },
 );
 
 app.get("/signout", (request, response, next) => {

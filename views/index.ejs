@@ -1,11 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Express</title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IOCL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <h1>jdj</h1>
-    <p>Welcome to jhhf</p>
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2 mb-2 mt-12">
+        <%- include('partials/header') %>
+        <p class="py-2">
+          Welcome to Online Voting App, here you can set up an election. Ask and
+          manage questions in the ballot, register voters, launch and end the
+          election and so on.
+        </p>
+        <p class="py-2">
+          If you are new here, and want to run a election!, Please
+          <a href="/signup" class="text-green-600">Sign-up</a>
+        </p>
+        <p class="py-2">
+          Already have an account?
+          <a href="/admin-login" class="text-green-600">Login</a>
+        </p>
+      </div>
+      <div class="col-start-3 col-span-2">
+        <%- include('partials/footer') %>
+      </div>
+    </div>
   </body>
 </html>

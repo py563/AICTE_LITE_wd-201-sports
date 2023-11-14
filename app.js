@@ -91,6 +91,7 @@ app.get("/", function (request, response) {
   response.render("index", {
     title: "Online Voting App",
     csrfToken: request.csrfToken(),
+    loggedIn: false,
   });
 });
 
@@ -98,6 +99,7 @@ app.get("/signup", async function (request, response) {
   response.render("signup", {
     title: "Sign-up",
     csrfToken: request.csrfToken(),
+    loggedIn: false,
   });
 });
 
@@ -152,6 +154,7 @@ app.get("/admin-login", (request, response) => {
   response.render("adminLogin", {
     csrfToken: request.csrfToken(),
     title: "Login",
+    loggedIn: false,
   });
 });
 
@@ -159,13 +162,17 @@ app.get(
   "/elections",
   connectEnsureLogin.ensureLoggedIn("/admin-login"),
   async function (request, response) {
+    console.log("Admin User: ", request.user.firstName);
+    const welcomeMessage = "Welcome " + request.user.firstName;
     if (request.accepts("html")) {
       response.render("elections", {
         title: "Online Voting App",
         csrfToken: request.csrfToken(),
+        welcomeMessage: welcomeMessage,
+        loggedIn: true,
       });
     } else {
-      response.json({ status: "Not Acceptable" });
+      response.json({ Message: welcomeMessage, Status: "Signed In" });
     }
   },
 );

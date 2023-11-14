@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
+app.set("view engine", "ejs");
 
 app.get("/", function (request, response) {
-  response.send("Welcome to Online Voting Platform!");
+  response.render("index");
 });
 
 module.exports = app;

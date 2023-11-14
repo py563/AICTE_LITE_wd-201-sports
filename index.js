@@ -1,5 +1,6 @@
-const hello = () => {
-  console.log("Hello Sports Scheduler!");
-};
+const app = require("./app");
 
-hello();
+app.listen(32563, () => {
+  console.log("Started express server at port 32563");
+  console.log("Open http://localhost:32563/ to see the app");
+});

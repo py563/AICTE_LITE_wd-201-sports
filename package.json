@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/py563/wd-201-online-voting/issues"
   },
-  "homepage": "https://github.com/py563/wd-201-online-voting#readme"
+  "homepage": "https://github.com/py563/wd-201-online-voting#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }

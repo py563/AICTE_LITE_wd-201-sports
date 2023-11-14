@@ -31,6 +31,11 @@ app.use(
     cookie: { maxAge: 24 * 60 * 60000 },
   })
 );
+//connect - flash middleware
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 //passport.js initialization
 app.use(passport.initialize());
@@ -162,5 +167,25 @@ app.get(
     }
   }
 );
+
+app.post(
+  "/session",
+  passport.authenticate("local", {
+    failureRedirect: "/admin-login",
+    failureFlash: true,
+  }),
+  (request, response) => {
+    response.redirect("/elections");
+  }
+);
+
+app.get("/signout", (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect("/");
+  });
+});
 
 module.exports = app;

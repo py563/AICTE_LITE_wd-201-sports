@@ -22,6 +22,28 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "cascade",
       });
     }
+    static addTodo({ title, dueDate, userId }) {
+      return this.create({
+        title: title,
+        dueDate: dueDate,
+        userId: userId,
+        completed: false,
+      });
+    }
+
+    static addElection({
+      electionName,
+      electionDescription,
+      status,
+      ovadminId,
+    }) {
+      return this.create({
+        electionName: electionName,
+        electionDescription: electionDescription,
+        status: status,
+        ovadminId: ovadminId,
+      });
+    }
   }
   Election.init(
     {

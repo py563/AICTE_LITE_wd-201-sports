@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const csrf = require("tiny-csrf");
-const { OVAdmin } = require("./models");
+const { OVAdmin, Election } = require("./models");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
@@ -112,7 +112,7 @@ app.post("/adminUsers", async function (request, response) {
     const emailAddress = request.body.emailAddress;
 
     // First Name and Last Name must be at least 2 characters long
-    if (request.body.firstName.length < 2 || request.body.lastName.length < 2) {
+    if (firstName.length < 2 || lastName.length < 2) {
       request.flash(
         "error",
         "First Name and Last Name must be at least 2 characters long",
@@ -203,6 +203,48 @@ app.get(
       });
     } else {
       response.json({ Message: welcomeMessage, Status: "Signed In" });
+    }
+  },
+);
+
+app.post(
+  "/create-election",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    console.log(
+      "Creating Election for: ",
+      request.user.firstName + " with title as " + request.body.electionName,
+    );
+    const loggedInUser = request.user.id;
+    // const welcomeMessage = "Welcome " + request.user.firstName;
+    const electionName = request.body.electionName;
+    const electionDescription = request.body.electionDescription;
+    if (!electionName || electionName.length < 3) {
+      request.flash(
+        "error",
+        "Please make sure you enter title of the election and it is at least 3 characters long",
+      );
+      return response.redirect("/create-election");
+    }
+    if (!electionDescription || electionDescription.length < 3) {
+      request.flash(
+        "error",
+        "Please make sure you enter description of the election and it is at least 3 characters long",
+      );
+      return response.redirect("/create-election");
+    }
+    try {
+      const election = await Election.addElection({
+        electionName: electionName,
+        electionDescription: electionDescription,
+        status: false,
+        ovadminId: loggedInUser,
+      });
+      console.log("Election created: ", election.id);
+      return response.redirect("/elections");
+    } catch (error) {
+      console.log(error);
+      return response.status(422).json(error);
     }
   },
 );

@@ -188,6 +188,25 @@ app.post(
   },
 );
 
+app.get(
+  "/create-election",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    console.log("Admin User: ", request.user.firstName);
+    const welcomeMessage = "Welcome " + request.user.firstName;
+    if (request.accepts("html")) {
+      response.render("createElection", {
+        title: "Create Election",
+        csrfToken: request.csrfToken(),
+        welcomeMessage: welcomeMessage,
+        loggedIn: true,
+      });
+    } else {
+      response.json({ Message: welcomeMessage, Status: "Signed In" });
+    }
+  },
+);
+
 app.get("/signout", (request, response, next) => {
   request.logout((err) => {
     if (err) {

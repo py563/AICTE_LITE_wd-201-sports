@@ -10,14 +10,14 @@
     <h2 class="text-lg font-medium"><%= election.electionName %></h2>
     <% if(headingTitle === "New Elections") { %>
     <a
-      href="#"
+      href="/edit-election/<%= election.id %>"
       class="ml-2 trash-icon"
       onclick="editElection(<%= election.id %>)"
     >
       Edit
     </a>
     <a
-      href="#"
+      href="/editElection"
       class="ml-2 trash-icon"
       onclick="editElection(<%= election.id %>)"
     >

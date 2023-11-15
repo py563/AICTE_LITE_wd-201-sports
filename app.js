@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const csrf = require("tiny-csrf");
 const { OVAdmin, Election } = require("./models");
+const ElectionService = require("./services/ElectionService");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
@@ -252,6 +253,35 @@ app.post(
     } catch (error) {
       console.log(error);
       return response.status(422).json(error);
+    }
+  },
+);
+
+app.get(
+  "/edit-election/:id",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    console.log("Admin User: ", request.user.firstName);
+    const welcomeMessage = "Welcome " + request.user.firstName;
+    const electionId = request.params.id;
+    const electionServiceInstance = new ElectionService();
+    const activeQuestions =
+      await electionServiceInstance.viewElectionQuestions(electionId);
+    const activeVoters =
+      await ElectionService.getVotersByElectionId(electionId);
+    console.log("Active Questions: ", activeQuestions.length);
+    if (request.accepts("html")) {
+      response.render("editElection", {
+        title: "Edit Elections",
+        csrfToken: request.csrfToken(),
+        welcomeMessage: welcomeMessage,
+        loggedIn: true,
+        electionId: electionId,
+        activeQuestions: activeQuestions,
+        activeVoters: activeVoters,
+      });
+    } else {
+      response.json({ Message: welcomeMessage, Status: "Signed In" });
     }
   },
 );

@@ -163,13 +163,20 @@ app.get(
   connectEnsureLogin.ensureLoggedIn("/admin-login"),
   async function (request, response) {
     console.log("Admin User: ", request.user.firstName);
+    const loggedInUser = request.user.id;
     const welcomeMessage = "Welcome " + request.user.firstName;
+    const newElections = await Election.newElection(loggedInUser);
+    const activeElections = await Election.activeElection(loggedInUser);
+    const completedElections = await Election.closedElection(loggedInUser);
     if (request.accepts("html")) {
       response.render("elections", {
         title: "Online Voting App",
         csrfToken: request.csrfToken(),
         welcomeMessage: welcomeMessage,
         loggedIn: true,
+        newElections: newElections,
+        activeElections: activeElections,
+        completedElections: completedElections,
       });
     } else {
       response.json({ Message: welcomeMessage, Status: "Signed In" });

@@ -1,0 +1,62 @@
+<div class="flex">
+  <h5><%=headingTitle %></h5>
+  <span id="<%=countName %>" class="ml-2 text-sm px-2 py-1 bg-gray-200"
+    ><%=data.length %></span
+  >
+</div>
+<div class="max-w-md mx-auto">
+  <% for (let election of data) { %>
+  <div class="my-4">
+    <h2 class="text-lg font-medium"><%= election.electionName %></h2>
+    <% if(headingTitle === "New Elections") { %>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      Edit
+    </a>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      Launch
+    </a>
+    <% } %>
+    <% if(headingTitle === "Completed Elections") { %>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      View
+    </a>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      Results
+    </a>
+    <% } %>
+    <% if(headingTitle === "Active Elections") { %>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      View
+    </a>
+    <a
+      href="#"
+      class="ml-2 trash-icon"
+      onclick="editElection(<%= election.id %>)"
+    >
+      Manage
+    </a>
+    <% } %>
+    <p class="text-sm text-gray-500"><%= election.electionDescription %></p>
+  </div>
+  <% } %>
+</div>

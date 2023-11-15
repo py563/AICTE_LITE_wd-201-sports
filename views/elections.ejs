@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -18,6 +18,18 @@
         >
           <%- include('partials/header') %>
           <p class="py-2"><%= welcomeMessage %>, See your elections here</p>
+        </div>
+        <div class="col-start-3 col-span-2">
+          <%- include('partials/election', {headingTitle:"New Elections", countName:"count-of-new-elections",
+      data:newElections}) %>
+        </div>
+        <div class="col-start-3 col-span-2">
+          <%- include('partials/election', {headingTitle:"Active Elections", countName:"count-of-active-elections",
+      data:activeElections}) %>
+        </div>
+        <div class="col-start-3 col-span-2">
+          <%- include('partials/election', {headingTitle:"Completed Elections", countName:"count-of-completed-elections",
+      data:completedElections}) %>
         </div>
       </div>
       <div class="col-start-3 col-span-2">

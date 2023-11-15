@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Election extends Model {
     /**
@@ -42,6 +42,39 @@ module.exports = (sequelize, DataTypes) => {
         electionDescription: electionDescription,
         status: status,
         ovadminId: ovadminId,
+      });
+    }
+
+    static async newElection(ovadminId) {
+      return await Election.findAll({
+        where: {
+          ovadminId: ovadminId,
+          status: false,
+          startDate: null,
+          endDate: null,
+        },
+      });
+    }
+
+    static async activeElection(ovadminId) {
+      return await Election.findAll({
+        where: {
+          ovadminId: ovadminId,
+          status: true,
+          endDate: null,
+        },
+      });
+    }
+
+    static async closedElection(ovadminId) {
+      return await Election.findAll({
+        where: {
+          ovadminId: ovadminId,
+          status: true,
+          endDate: {
+            [Op.lte]: new Date().toLocaleDateString("en-ca"),
+          },
+        },
       });
     }
   }

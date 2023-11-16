@@ -286,6 +286,68 @@ app.get(
   },
 );
 
+app.get(
+  "/edit-election/:id/add-question",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const welcomeMessage = "Welcome " + request.user.firstName;
+    response.render("addQuestion", {
+      title: "Add Question",
+      csrfToken: request.csrfToken(),
+      welcomeMessage: welcomeMessage,
+      loggedIn: true,
+      electionId: electionId,
+    });
+  },
+);
+
+app.post(
+  "/edit-election/:id/add-question",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const questionText = request.body.qsText;
+    const questionDescription = request.body.description;
+    const question = await ElectionService.addQuestionToElection(
+      electionId,
+      questionText,
+      questionDescription,
+    );
+    console.log("Question added: ", question.id);
+    response.redirect("/edit-question/" + question.id + "/add-option");
+  },
+);
+
+app.get("/edit-question/:id/add-option", async function (request, response) {
+  const questionId = request.params.id;
+  const question = await ElectionService.getQuestionById(questionId);
+  const addedOptions = await question.getOptions();
+  response.render("addOptions", {
+    title: "Add Options",
+    welcomeMessage: "Welcome " + request.user.firstName,
+    csrfToken: request.csrfToken(),
+    loggedIn: true,
+    question: question,
+    addedOptions: addedOptions,
+  });
+});
+
+app.post(
+  "/edit-question/:id/add-option",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const questionId = request.params.id;
+    const optionText = request.body.optText;
+    const option = await ElectionService.addOptionToQuestion(
+      questionId,
+      optionText,
+    );
+    console.log("Option added: ", option.id);
+    response.redirect("/edit-question/" + questionId + "/add-option");
+  },
+);
+
 app.get("/signout", (request, response, next) => {
   request.logout((err) => {
     if (err) {

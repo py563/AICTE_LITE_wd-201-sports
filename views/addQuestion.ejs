@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="<%= csrfToken %>" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="grid grid-cols-6 my-4">
+      <div
+        class="col-start-2 col-span-4 w-full bg-white rounded-lg shadow sm:max-w-md md:max-w-lg md:mt-0 lg:max-w-xl xl:max-w-2xl xl:p-0"
+      >
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <%- include('partials/header') %>
+          <h6
+            class="text-base font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+          >
+            <%= welcomeMessage %>, add a question for your elections here
+          </h6>
+        </div>
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <%- include('partials/assignQuestion', {headingTitle:"Add Questions", countName:"count-of-active-questions", electionId:electionId }) %>
+        </div>
+      </div>
+      <div class="col-start-3 col-span-2">
+        <%- include('partials/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

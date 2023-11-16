@@ -10,7 +10,7 @@
   >
   &nbsp; &nbsp; &nbsp;
   <a
-    href="/addQuestion/<%= electionId %>"
+    href="/edit-election/<%=electionId %>/add-question"
     class="w-1/2 text-blue bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
   >
     Add New Question
@@ -19,23 +19,28 @@
 <div class="max-w-md mx-auto">
   <% for (let i = 0; i < data.length; i++) { %>
   <div class="my-4">
-    <h2 class="text-lg font-medium"><%= data[i].question.qsText %></h2>
-    <p class="text-sm text-gray-500"><%= data[i].question.description %></p>
-    <% for (let option of data[i].options) { %>
-    <p class="text-sm text-gray-500"><%= option.optText %></p>
-    <!-- <% } %> -->
-    <button
-      type="submit"
-      class="w-full text-blue bg-sky-600 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+    <p class="text-md font-medium py-2"><%= i+1 %>) <%= data[i].question.qsText %> &nbsp; &nbsp; &nbsp;
+      <a
+      href="/edit-question/<%=data[i].question.id %>/add-option"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
     >
       Update
-    </button>
-    <button
-      type="submit"
-      class="w-full text-blue bg-sky-600 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+    </a>
+    &nbsp; &nbsp; &nbsp;
+    <a
+    href="#"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
     >
       Delete
-    </button>
+  </a></p>
+    <% for (let option of data[i].options) { %>
+      <input
+        type="radio"
+        id="<%= option.id %>"
+        name="<%= data[i].question.id %>"
+        value="<%= option.id %>"
+        class="mr-2 text-sm text-gray-500"> <%= option.optText %>  </input>
+    <% } %>
   </div>
-  <!-- <% } %> -->
+  <% } %>
 </div>

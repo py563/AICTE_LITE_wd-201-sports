@@ -7,18 +7,19 @@
 <div class="max-w-md mx-auto">
   <% for (let election of data) { %>
   <div class="my-4">
-    <h2 class="text-lg font-medium"><%= election.electionName %></h2>
+    <h2 class="text-lg font-medium py-2"><%= election.electionName %></h2>
+    <p class="text-sm text-gray-500 py-2"><%= election.electionDescription %></p>
     <% if(headingTitle === "New Elections") { %>
     <a
       href="/edit-election/<%= election.id %>"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       Edit
-    </a>
+    </a> &nbsp; &nbsp; &nbsp;
     <a
       href="/editElection"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       Launch
@@ -27,14 +28,14 @@
     <% if(headingTitle === "Completed Elections") { %>
     <a
       href="#"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       View
-    </a>
+    </a> &nbsp; &nbsp; &nbsp;
     <a
       href="#"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       Results
@@ -43,20 +44,19 @@
     <% if(headingTitle === "Active Elections") { %>
     <a
       href="#"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       View
-    </a>
+    </a> &nbsp; &nbsp; &nbsp;
     <a
       href="#"
-      class="ml-2 trash-icon"
+      class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       onclick="editElection(<%= election.id %>)"
     >
       Manage
     </a>
     <% } %>
-    <p class="text-sm text-gray-500"><%= election.electionDescription %></p>
   </div>
   <% } %>
 </div>

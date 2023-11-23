@@ -14,6 +14,7 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const connectEnsureLogin = require("connect-ensure-login");
 const bcrypt = require("bcrypt");
+const VoterService = require("./services/VoterService");
 const saltRounds = 10;
 
 // middleware
@@ -365,5 +366,73 @@ app.get("/voting", function (request, response) {
     csrfToken: request.csrfToken(),
   });
 });
+
+app.get(
+  "/edit-election/:id/add-voter",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const welcomeMessage = "Welcome " + request.user.firstName;
+    const voterServiceInstance = new VoterService();
+    const activeVoters =
+      await voterServiceInstance.viewElectionVoters(electionId);
+    response.render("addVoter", {
+      title: "Add Voter",
+      csrfToken: request.csrfToken(),
+      welcomeMessage: welcomeMessage,
+      loggedIn: true,
+      electionId: electionId,
+      countOfactiveVoters: activeVoters.length,
+    });
+  },
+);
+
+app.post(
+  "/edit-election/:id/add-voter",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    try {
+      console.log("Creating Voter: ", request.body.vID);
+      const voterId = request.body.vID;
+      if (voterId.length < 2) {
+        request.flash(
+          "error",
+          "Voter ID or Name should be at least 2 characters long",
+        );
+        return response.redirect("/edit-election/" + electionId + "/add-voter");
+      }
+
+      if (request.body.password.length < 4) {
+        request.flash("error", "Password must be at least 4 characters long");
+        return response.redirect("/edit-election/" + electionId + "/add-voter");
+      }
+
+      const hashedPassword = await bcrypt.hash(
+        request.body.password,
+        saltRounds,
+      );
+      const voterServiceInstance = new VoterService();
+      const voterExists = voterServiceInstance.checkVoter(electionId, voterId);
+      console.log("voter exists: " + voterExists);
+      if (voterExists === true) {
+        request.flash("error", "Voter Already Exists");
+        return response.redirect("/edit-election/" + electionId + "/add-voter");
+      }
+      const voterUser = await VoterService.addVoter(
+        electionId,
+        voterId,
+        hashedPassword,
+      );
+      console.log("Voter created: ", voterUser.id);
+      request.flash("success", "Voter added"); //Todo: add sucess flash message in UI
+      return response.redirect("/edit-election/" + electionId + "/add-voter");
+    } catch (error) {
+      console.log(error);
+      request.flash("error", "Cannot add voter, Please try again");
+      return response.redirect("/edit-election/" + electionId + "/add-voter");
+    }
+  },
+);
 
 module.exports = app;

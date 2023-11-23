@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="<%= csrfToken %>" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="grid grid-cols-6 my-4">
+      <div
+        class="col-start-2 col-span-4 w-full bg-white rounded-lg shadow sm:max-w-md md:max-w-lg md:mt-0 lg:max-w-xl xl:max-w-2xl xl:p-0"
+      >
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <%- include('partials/header') %>
+          <h6
+            class="text-base font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+          >
+            <%= welcomeMessage %>, add a voter for your election here !
+          </h6>
+          <h6
+            class="text-base font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
+          >
+            You have added <%= countOfactiveVoters %> voters till now !
+          </h6>
+        </div>
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <%- include('partials/assignVoter', {electionId:electionId}) %>
+        </div>
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <a
+            href="/edit-election/<%= electionId %>/"
+            class="w-full text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          >
+           Save Voters
+          </a>
+        </div>
+      </div>
+      <div class="col-start-3 col-span-2">
+        <%- include('partials/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

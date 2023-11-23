@@ -10,7 +10,7 @@
   >
   &nbsp; &nbsp; &nbsp;
   <a
-    href="/addQuestion/<%= electionId %>"
+    href="/edit-election/<%= electionId %>/add-voter"
     class="w-1/2 text-blue bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
   >
     Add New Voter
@@ -19,13 +19,13 @@
 <div class="max-w-md mx-auto">
   <% for (let voter of data) { %>
   <div class="my-4">
-    <h2 class="text-lg font-medium"><%= voter.vID %></h2>
-    <button
-      type="submit"
-      class="w-1/3 text-blue bg-sky-600 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-    >
-      Delete
-    </button>
+    <p class="text-lg font-medium"><%= voter.vID %> &nbsp; &nbsp; &nbsp;
+      <a href="#"
+      class="w-1/5 text-blue bg-sky-600 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      >
+        Delete
+      </a>
+    </p>
   </div>
   <% } %>
 </div>

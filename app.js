@@ -74,19 +74,62 @@ passport.use(
   ),
 );
 
+passport.use(
+  "voter-local",
+  new LocalStrategy(
+    {
+      usernameField: "voterId",
+      passwordField: "password",
+      passReqToCallback: true,
+    },
+    (request, username, password, done) => {
+      VoterService.getVoterByVoterId(username)
+        .then(async function (user) {
+          if (!user) {
+            return done(null, false, {
+              message:
+                "An Account with this voter id does not exist or not assigned for this election id",
+            });
+          }
+          const result = await bcrypt.compare(password, user.password);
+          if (result) {
+            session.role = "voter";
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Invalid password" });
+          }
+        })
+        .catch((error) => {
+          console.log("Could not get voter:" + error.message);
+          return done(null, false, { message: "Invalid Voter-Id" });
+        });
+    },
+  ),
+);
+
 passport.serializeUser((user, done) => {
   console.log("Serializing user: ", user);
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  OVAdmin.findByPk(id)
-    .then((adminuser) => {
-      done(null, adminuser);
-    })
-    .catch((error) => {
-      done(error, null);
-    });
+passport.deserializeUser((req, id, done) => {
+  if (session.role === "voter") {
+    VoterService.getVoterById(id)
+      .then((user) => {
+        done(null, user, req);
+      })
+      .catch((error) => {
+        done(error, null);
+      });
+  } else {
+    OVAdmin.findByPk(id)
+      .then((adminuser) => {
+        done(null, adminuser);
+      })
+      .catch((error) => {
+        done(error, null);
+      });
+  }
 });
 
 app.get("/", function (request, response) {
@@ -360,12 +403,39 @@ app.get("/signout", (request, response, next) => {
 
 // voting routes
 
-app.get("/voting", function (request, response) {
-  response.render("voteElections", {
-    title: "Online Voting App",
+app.get("/voter-login", (request, response) => {
+  response.render("voterLogin", {
     csrfToken: request.csrfToken(),
+    title: "Voter Login",
+    loggedIn: false,
   });
 });
+
+app.post(
+  "/voter-session",
+  passport.authenticate("voter-local", {
+    failureRedirect: "/voter-login/",
+    failureFlash: true,
+  }),
+  (request, response) => {
+    console.log("Voter Login successful");
+    response.redirect("/voter-home/");
+  },
+);
+
+app.get(
+  "/voter-home",
+  connectEnsureLogin.ensureLoggedIn("/voter-login"),
+  async function (request, response) {
+    const welcomeMessage = "Welcome " + request.user.vID;
+    response.render("voterHome", {
+      title: "Voter Home",
+      csrfToken: request.csrfToken(),
+      welcomeMessage: welcomeMessage,
+      loggedIn: true,
+    });
+  },
+);
 
 app.get(
   "/edit-election/:id/add-voter",
@@ -432,6 +502,23 @@ app.post(
       request.flash("error", "Cannot add voter, Please try again");
       return response.redirect("/edit-election/" + electionId + "/add-voter");
     }
+  },
+);
+
+app.get(
+  "/launched-election/:id/",
+  connectEnsureLogin.ensureLoggedIn("/voter-login/"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const welcomeMessage = "Voter can view election with id";
+    console.log("Voting for: ", request.params.id);
+    response.render("voteElections", {
+      title: "Voting",
+      csrfToken: request.csrfToken(),
+      welcomeMessage: welcomeMessage,
+      loggedIn: true,
+      electionId: electionId,
+    });
   },
 );
 

@@ -1,0 +1,39 @@
+<div class="my-4">
+    <% if(headingTitle === "Current Elections") { %>
+        <h2 class="text-lg font-medium">Current Elections</h2>
+        <p class="text-sm text-gray-500">
+        Do Vote below for the running elections.
+        </p>
+        <% for (let j = 0; j < 3; j++) { %>
+            <p class="text-md text-gray-500 py-2 my-4">
+            <span class="ml-2"><%= j %></span> &nbsp; &nbsp; &nbsp;
+            <a
+                href="/launched-election/<%= j %>/"
+                class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onclick=""
+            >
+                Vote
+            </a>
+            </p>
+        <% } %>
+    <% } %>
+    <% if(headingTitle === "Completed Elections") { %>
+        <h2 class="text-lg font-medium">Completed Elections</h2>
+        <p class="text-sm text-gray-500">
+        View previous voted elections and your response.
+        </p>
+        <% for (let j = 0; j < 3; j++) { %>
+            <p class="text-md text-gray-500 py-2 my-4">
+            <span class="ml-2"><%= j %></span> &nbsp; &nbsp; &nbsp;
+            <a
+                href="/launched-election/<%= j %>/voter-response"
+                class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                onclick=""
+            >
+                View Response
+            </a>
+            </p>
+        <% } %>
+    <% } %>
+</div>
+  

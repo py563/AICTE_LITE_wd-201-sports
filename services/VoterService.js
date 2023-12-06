@@ -5,9 +5,31 @@ class VoterService {
     this.elecVoters = [];
   }
 
-  static async getVoterById(voterId) {
+  static async getVoterById(id) {
     try {
-      const voter = await Voter.findByPk(voterId);
+      const voter = await Voter.findByPk(id);
+      return voter;
+    } catch (error) {
+      throw new Error(`Could not get voter: ${error.message}`);
+    }
+  }
+
+  static async getVoterByVoterId(voterId) {
+    try {
+      const voter = await Voter.findOne({
+        where: { vID: voterId },
+      });
+      return voter;
+    } catch (error) {
+      throw new Error(`Could not get voter: ${error.message}`);
+    }
+  }
+
+  static async getVoterByElectionId(voterId, electionId) {
+    try {
+      const voter = await Voter.findOne({
+        where: { vID: voterId, electionId: electionId },
+      });
       return voter;
     } catch (error) {
       throw new Error(`Could not get voter: ${error.message}`);

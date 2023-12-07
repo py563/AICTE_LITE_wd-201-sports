@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+const e = require("connect-flash");
 const { Question, Election, Option } = require("../models");
 
 class ElectionService {
@@ -68,6 +69,7 @@ class ElectionService {
       throw new Error(`Could not add question: ${error.message}`);
     }
   }
+
   static async addOptionToQuestion(questionId, optionText) {
     try {
       const question = await Question.findByPk(questionId);
@@ -78,6 +80,78 @@ class ElectionService {
       return option;
     } catch (error) {
       throw new Error(`Could not add option: ${error.message}`);
+    }
+  }
+
+  // launching an election
+
+  async launchPreviewElection(electionId) {
+    try {
+      const election = await Election.findByPk(electionId);
+      // run Luanch Checks on election
+      // check if election is already active or closed
+      if (election.status === true) {
+        throw new Error("Election is already active");
+      }
+      //check if election has questions
+      const questions = await election.getQuestions();
+      if (questions.length === 0) {
+        throw new Error(
+          "Election has No Questions, Please add atleast a question",
+        );
+      }
+      //check if election has voters
+      const voters = await election.getVoters();
+      if (voters.length === 0) {
+        throw new Error(
+          "Election has No Voters, Please assign atleast a voter",
+        );
+      }
+      //check if election has questions with aleast two options respectively
+      for (let question of questions) {
+        if ((await question.countOptions()) < 2) {
+          throw new Error("Election has a question with less than two options");
+        }
+      }
+      return election;
+    } catch (error) {
+      throw new Error(`Could not launch election: ${error.message}`);
+    }
+  }
+
+  static async launchConfirmElection(electionId) {
+    try {
+      const election = await Election.findByPk(electionId);
+      election.status = true;
+      election.startDate = new Date();
+      await election.save();
+      return election;
+    } catch (error) {
+      throw new Error(`Could not launch election: ${error.message}`);
+    }
+  }
+
+  static async deleteElection(electionId) {
+    try {
+      const election = await Election.findByPk(electionId);
+      await election.destroy();
+      return election;
+    } catch (error) {
+      throw new Error(`Could not delete election: ${error.message}`);
+    }
+  }
+
+  static async addElection(electionName, electionDescription, ovadminId) {
+    try {
+      const election = await Election.create({
+        electionName: electionName,
+        electionDescription: electionDescription,
+        status: false,
+        ovadminId: ovadminId,
+      });
+      return election;
+    } catch (error) {
+      throw new Error(`Could not add election: ${error.message}`);
     }
   }
 }

@@ -20,6 +20,20 @@
           >
             <%= welcomeMessage %>, Edit your elections here
           </h6>
+          <div class="gap-2 py-2">
+            <% if(messages && messages.error && messages.error.length > 0) {
+            %>
+            <ul class="list-none">
+              <% for(let i=0; i < messages.error.length; i++) { %>
+              <li
+                class="text-base leading-tight tracking-tight text-red-900 md:text-xs"
+              >
+                <%= messages.error[i] %>
+              </li>
+              <% } %>
+            </ul>
+            <% } %>
+          </div>
         </div>
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
           <%- include('partials/viewQuestions', {headingTitle:"View Questions", countName:"count-of-active-questions", electionId:electionId, data: activeQuestions}) %>

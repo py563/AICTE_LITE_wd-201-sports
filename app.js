@@ -286,12 +286,11 @@ app.post(
       return response.redirect("/create-election");
     }
     try {
-      const election = await Election.addElection({
-        electionName: electionName,
-        electionDescription: electionDescription,
-        status: false,
-        ovadminId: loggedInUser,
-      });
+      const election = await ElectionService.addElection(
+        electionName,
+        electionDescription,
+        loggedInUser,
+      );
       console.log("Election created: ", election.id);
       return response.redirect("/elections");
     } catch (error) {
@@ -314,6 +313,7 @@ app.get(
     const activeVoters =
       await ElectionService.getVotersByElectionId(electionId);
     console.log("Active Questions: ", activeQuestions.length);
+    //todo: add flash message for launched election check
     if (request.accepts("html")) {
       response.render("editElection", {
         title: "Edit Elections",
@@ -505,6 +505,7 @@ app.post(
   },
 );
 
+//launching an election
 app.get(
   "/launched-election/:id/",
   connectEnsureLogin.ensureLoggedIn("/voter-login/"),
@@ -522,4 +523,59 @@ app.get(
   },
 );
 
+app.get(
+  "/preview-election/:id/",
+  connectEnsureLogin.ensureLoggedIn("/admin-login/"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    try {
+      const electionServiceInstance = new ElectionService();
+      const election =
+        await electionServiceInstance.launchPreviewElection(electionId);
+      const electionStatus = election.status;
+      console.log("election status: " + electionStatus);
+      const activeQuestions =
+        await electionServiceInstance.viewElectionQuestions(electionId);
+      const adminInfoMessage =
+        "http://<server-url>:<port>/launched-election/" + electionId + "/";
+      const welcomeMessage =
+        "Hi (Voter Name), Vote here for Election No: " + electionId + ".";
+      response.render("previewElection", {
+        title: "Preview Elections",
+        csrfToken: request.csrfToken(),
+        adminInfoMessage: adminInfoMessage,
+        welcomeMessage: welcomeMessage,
+        loggedIn: true,
+        electionId: electionId,
+        currentElection: election,
+        activeQuestions: activeQuestions,
+      });
+    } catch (error) {
+      console.log(error);
+      request.flash("error", error.message);
+      return response.redirect("/edit-election/" + electionId + "/");
+    }
+  },
+);
+
+app.get(
+  "/preview-election/:id/confirm-launch/",
+  connectEnsureLogin.ensureLoggedIn("/admin-login/"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    try {
+      const election = await ElectionService.launchConfirmElection(electionId);
+      const electionStatusMessage =
+        "Election with id:" + electionId + " Launched Successfully.";
+      console.log("election status: " + electionStatusMessage);
+      console.log("election start date: " + election.startDate);
+      request.flash("success", electionStatusMessage);
+      return response.redirect("/elections/");
+    } catch (error) {
+      console.log(error);
+      request.flash("error", error.message);
+      return response.redirect("/edit-election/" + electionId + "/");
+    }
+  },
+);
 module.exports = app;

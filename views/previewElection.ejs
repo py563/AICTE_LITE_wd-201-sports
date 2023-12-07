@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="<%= csrfToken %>" />
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <div class="grid grid-cols-6 my-4">
+      <div
+        class="col-start-3 col-span-2 w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0"
+      >
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <%- include('partials/header') %>
+          <p class="text-sm text-red-500 py-1">Please Check Election Public Preview and Confirm Launch</p>
+          <p class="text-sm text-green-500 py-1">After Launching the election, Voters can vote using the following link: <%= adminInfoMessage %></p>
+          <p class="py-2"><%= welcomeMessage %></p>
+          <h2 class="text-lg font-medium py-1">Election Name : <%= currentElection.electionName %></h2>
+          <p class="text-sm text-gray-500 py-1">Election Description : <%= currentElection.electionDescription %></p>
+          <p class="text-sm text-gray-500 py-1">Start Date: <%= new Date().toLocaleDateString('default', {day:'numeric', month: 'long', year:'numeric'}) %></p>
+          <!-- <p class="text-sm text-gray-500 py-1">End Date: currentElection.endDate </p> -->
+        </div>
+        <div class="p-6 space-y-4 md:space-y-2 sm:p-8">
+            <h3 class="text-md font-medium py-2">Polling Questions</h3>
+            <% for (let i = 0; i < activeQuestions.length; i++) { %>
+                <div class="my-4">
+                    <p class="text-md font-medium py-2"><%= i+1 %>) <%= activeQuestions[i].question.qsText %> </p>
+                    <% for (let option of activeQuestions[i].options) { %>
+                        <input
+                        type="radio"
+                        id="<%= option.id %>"
+                        name="<%= activeQuestions[i].question.id %>"
+                        value="<%= option.id %>"
+                        class="mr-2 text-sm text-gray-500"> <%= option.optText %>  </input>
+                    <% } %>
+                </div>
+            <% } %>
+            <div class="my-4">
+                <a
+            href="/preview-election/<%= electionId %>/confirm-launch/"
+            class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            onclick="launchElection(<%= electionId %>)"
+          >
+            Confirm Launch
+          </a>
+          &nbsp; &nbsp; &nbsp;
+          <a
+            href="/elections"
+            class="w-1/5 text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          >
+            Go Back
+          </a>
+            </div>
+        </div>
+      </div>
+      <div class="col-start-3 col-span-2">
+        <%- include('partials/footer') %>
+      </div>
+    </div>
+  </body>
+</html>

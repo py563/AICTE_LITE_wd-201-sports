@@ -308,6 +308,8 @@ app.get(
     const welcomeMessage = "Welcome " + request.user.firstName;
     const electionId = request.params.id;
     const electionServiceInstance = new ElectionService();
+    const isLaunchable =
+      await electionServiceInstance.checkElectionLaunchable(electionId);
     const activeQuestions =
       await electionServiceInstance.viewElectionQuestions(electionId);
     const activeVoters =
@@ -321,6 +323,7 @@ app.get(
         welcomeMessage: welcomeMessage,
         loggedIn: true,
         electionId: electionId,
+        isLaunchable: isLaunchable,
         activeQuestions: activeQuestions,
         activeVoters: activeVoters,
       });
@@ -504,6 +507,12 @@ app.post(
     }
   },
 );
+
+//delete voter
+
+//delete question
+
+//delete option
 
 //launching an election
 app.get(

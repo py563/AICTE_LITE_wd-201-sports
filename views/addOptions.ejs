@@ -33,7 +33,7 @@
           <p 
             class="text-sm leading-tight tracking-tight text-gray-900 md:text-lg"
           >
-            We have <%= addedOptions.length %> options for this question, We need atleast two options to start the election
+            Question has <%= addedOptions.length %> options for this question.
           </p>
           <div>
             <%- include('partials/viewOptionsForQuestion', {options:addedOptions}) %>
@@ -43,13 +43,21 @@
           <%- include('partials/assignOption', {questionId:question.id}) %>
         </div>
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <a
-            href="/edit-election/<%= question.electionId %>/"
-            class="w-full text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          >
-           Save Question
-          </a>
-        </div>
+          <% if (addedOptions.length >= 2) { %>
+            <a
+              href="/edit-election/<%= question.electionId %>/"
+              class="w-full text-sm bg-teal-500 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+            >
+            Save Question
+            </a>
+          <% } else { %>
+            <p 
+              class="text-sm leading-tight tracking-tight text-red-900 md:text-sm"
+            >
+              Please add atleast 2 options for this question.
+            </p>
+          <% } %>
+        </div>  
       </div>
       <div class="col-start-3 col-span-2">
         <%- include('partials/footer') %>

@@ -21,6 +21,13 @@
             <%= welcomeMessage %>, Edit your elections here
           </h6>
           <div class="gap-2 py-2">
+            <% if (! isLaunchable) { %>
+              <p 
+                class="text-sm leading-tight tracking-tight text-red-900 md:text-md"
+              >
+                This election cannot be launched as it does have few questions with less than two options or it has no voters.
+              </p>
+            <% } %>
             <% if(messages && messages.error && messages.error.length > 0) {
             %>
             <ul class="list-none">

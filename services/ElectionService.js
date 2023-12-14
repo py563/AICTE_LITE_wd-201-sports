@@ -154,6 +154,35 @@ class ElectionService {
       throw new Error(`Could not add election: ${error.message}`);
     }
   }
+
+  async checkElectionLaunchable(electionId) {
+    try {
+      const election = await Election.findByPk(electionId);
+      // run Luanch Checks on election
+      // check if election is already active or closed
+      if (election.status === true) {
+        return true;
+      }
+      //check if election has questions or voters
+      const questions = await election.getQuestions();
+      if (
+        questions.length === 0 ||
+        (await election.getVoters().length) === 0 ||
+        questions === null
+      ) {
+        return false;
+      }
+      //check if election has questions with aleast two options respectively
+      for (let question of questions) {
+        if ((await question.countOptions()) < 2) {
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      throw new Error(`Could not find election: ${error.message}`);
+    }
+  }
 }
 
 module.exports = ElectionService;

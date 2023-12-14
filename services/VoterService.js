@@ -36,10 +36,11 @@ class VoterService {
     }
   }
 
-  static async deleteVoter(voterId) {
+  static async deleteVoter(electionId, voterId) {
     try {
-      const voter = await Voter.findByIdAndDelete(voterId);
-      return voter;
+      const election = await Election.findByPk(electionId);
+      const voter = await Voter.findByPk(voterId);
+      return await election.removeVoter(voter);
     } catch (error) {
       throw new Error(`Could not delete voter: ${error.message}`);
     }

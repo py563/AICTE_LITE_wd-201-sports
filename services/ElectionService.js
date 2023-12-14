@@ -165,11 +165,7 @@ class ElectionService {
       }
       //check if election has questions or voters
       const questions = await election.getQuestions();
-      if (
-        questions.length === 0 ||
-        (await election.getVoters().length) === 0 ||
-        questions === null
-      ) {
+      if (questions.length === 0 && (await election.getVoters().length) === 0) {
         return false;
       }
       //check if election has questions with aleast two options respectively
@@ -181,6 +177,17 @@ class ElectionService {
       return true;
     } catch (error) {
       throw new Error(`Could not find election: ${error.message}`);
+    }
+  }
+
+  static async deleteQuestion(electionId, questionId) {
+    try {
+      const election = await Election.findByPk(electionId);
+      const question = await Question.findByPk(questionId);
+      await question.removeOptions();
+      return await election.removeQuestion(question);
+    } catch (error) {
+      throw new Error(`Could not delete question: ${error.message}`);
     }
   }
 }

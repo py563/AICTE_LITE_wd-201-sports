@@ -509,8 +509,45 @@ app.post(
 );
 
 //delete voter
+app.delete(
+  "/edit-election/:id/delete-voter/:voterId",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const voterId = request.params.voterId;
+    try {
+      const isVoterDeleted = VoterService.deleteVoter(electionId, voterId);
+      console.log("Voter: " + voterId + "deleted: " + isVoterDeleted);
+      return response.json({ success: true });
+    } catch (error) {
+      console.log(error);
+      request.flash("error", "Cannot delete voter, Please try again");
+      response.status(422).json(error);
+    }
+  },
+);
 
 //delete question
+app.delete(
+  "/edit-election/:id/delete-question/:questionId",
+  connectEnsureLogin.ensureLoggedIn("/admin-login"),
+  async function (request, response) {
+    const electionId = request.params.id;
+    const questionId = request.params.questionId;
+    try {
+      const isQuestionDeleted = await ElectionService.deleteQuestion(
+        electionId,
+        questionId,
+      );
+      console.log("Question: " + questionId + "deleted: " + isQuestionDeleted);
+      return response.json({ success: true });
+    } catch (error) {
+      console.log(error);
+      request.flash("error", "Cannot delete question, Please try again");
+      response.status(422).json(error);
+    }
+  },
+);
 
 //delete option
 

@@ -21,10 +21,12 @@
   <div class="my-4">
     <p class="text-lg font-medium"><%= voter.vID %> &nbsp; &nbsp; &nbsp;
       <a href="#"
+      onclick="deleteVoter(<%= electionId %>, <%= voter.id %>)"
       class="w-1/5 text-blue bg-sky-600 hover:bg-cyan-600 focus:ring-4 focus:outline-none focus:ring-aqua-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       >
         Delete
       </a>
+            
     </p>
   </div>
   <% } %>
